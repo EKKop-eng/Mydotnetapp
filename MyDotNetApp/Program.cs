@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseKestrel()
-    .UseUrls($"http://*:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
-
+// Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Serve static files for favicon or assets
+builder.Services.AddDirectoryBrowser();
 
 var app = builder.Build();
 
@@ -20,10 +21,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Enable static file serving
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
+
+
